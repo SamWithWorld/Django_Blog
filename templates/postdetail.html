@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div>
+    {% if post.published_date %}
+    {{ post.published_date }}
+        {% else %}
+        {% if user.is_authenticated  %}
+        <a class="btn btn-default" href="{% url 'blog.views.post_publish' pk=post.pk %}">Publish</a>
+            {% endif %}
+    {% endif %}
+    </div>
+    {% if user.is_authenticated %}
+    <a class="btn btn-default" href="{% url 'blog.views.post_edit' pk=post.pk %}"><span class="glyphicon glyphicon-pencil"></span></a>
+    <a class="btn btn-default" href="{% url 'blog.views.post_remove' pk=post.pk %}"><span class="glyphicon glyphicon-remove"></span></a>
+    {% endif %}
+    <div class="blog-post">
+            <h2 class="blog-post-title">{{ post.title }}</h2>
+            <p>{{ post.text | linebreaks }}</p>
+          </div>
+    <div id="commentlist">
+     {% if not  comment %}
+      <ol id="thecomments">
+          <li class="messagebox">nothing</li>
+      </ol>
+       {% else %}
+         {% for c in comment %}
+               <li class="blog-post-meta">
+               <ol>{{ c.author }}</ol>
+               <ol>{{ c.text }}</ol>
+               <ol>{{c.create_date }}</ol>
+               </li>
+
+             {% endfor %}
+
+       {% endif %}
+    </div>
+
+
+    <form action="{% url 'blog.views.add_comment' pk=post.pk %}" method="post">
+      {% csrf_token %}
+    <div id="respond" class="form-group">
+                 <label for="author" class="small">author</label>
+                <input type="text" name="author" id="author" class="textfield" value=""  required >
+
+
+                 <label for="email" class="small" >email</label>
+                <input type="email" name="email" id="email" class="text-info" value=""   required autofocus>
+
+
+           <div>
+               <label for="comment"></label>
+            <textarea name="text" id="comment" tabindex="4" rows="8" cols="80"></textarea>
+           </div>
+
+
+
+              <div class="btn" >
+                  <input name="submit" type="submit" id="submit" class="btn btn-success" tabindex="5" value="submit comment">
+              </div>
+
+        </div>
+
+    </form>
+{% endblock %}

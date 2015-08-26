@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% load pagination_tags %}
+{% block content %}
+    {% autopaginate posts 5 %}
+{% for i in posts %}
+ <div class="blog-post">
+            <h2 class="blog-post-title"><a href="{% url 'blog.views.post_detail' pk=i.pk %}">{{ i.title }}</a></h2>
+
+            <p class="blog-post-meta">{{ i.create_date }} </p>
+            <p>{{ i.text | linebreaks }}</p>
+          </div>
+
+{% endfor %}
+    {% paginate %}
+{% endblock %}
+
+
+
