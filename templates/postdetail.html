@@ -19,13 +19,11 @@
           </div>
     <div id="commentlist">
      {% if not  comment %}
-      <ol id="thecomments">
-          <li class="messagebox">nothing</li>
-      </ol>
+      <h5>没有评论</h5>
        {% else %}
          {% for c in comment %}
                <li class="blog-post-meta">
-               <ol>{{ c.author }}</ol>
+               <ol class="fa-font">{{ c.author }}</ol>
                <ol>{{ c.text }}</ol>
                <ol>{{c.create_date }}</ol>
                </li>

@@ -13,9 +13,10 @@ def post_list(request):
 def post_detail(request,pk):
     print pk
     post = get_object_or_404(Post,pk=pk)
-    comment = Comment.objects.filter(post__id=pk)
-
-
+    try:
+        comment = Comment.objects.filter(post__id=pk)
+    except:
+        comment = dict()
     return render(request,'postdetail.html',{'post':post,'comment':comment})
 
 
