@@ -1,13 +1,22 @@
 from django.shortcuts import render,get_object_or_404,redirect
 from django.contrib.auth.decorators import login_required
-from .models import Post,Comment
+from .models import Post,Comment,Tag,Category,Evaluate
 from .forms import PostForm,CommentForm
+from django.db.models import  Count
 
 
 
 def post_list(request):
-    posts = Post.objects.filter(published_date__isnull=False).order_by('-published_date')
+   # posts = Post.objects.filter(published_date__isnull=False).order_by('-published_date')
+    posts = Post.objects.annotate(
+        num_comment=Count('comment')).filter(published_date__isnull=False).prefetch_related(
+        'category').prefetch_related('tags').order_by('-published_date')
     return render(request,'postlist.html',{'posts':posts})
+
+def post_list_by_tag(request,tag):
+    posts = Post.objects.annotate(num_comment=Count('comment')).filter(published_date__isnull=False,tags__name=tag).prefetch_related(
+        'category').prefetch_related('tags').order_by('published_date')
+    return render(request,'postlist.html',{'posts':posts,'list_header':'wordtag \'{}\''.format(tag)})
 
 
 def post_detail(request,pk):
